@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     application_id: int
     imagine_id: int = 938956540159881230
     session_id: str = "0deb67ca254c9362f66f4540d843598e"
-    version_id: int = 1118961510123847772
+    version_id: str = "1118961510123847772"
     openai_api_key: str
 
     model_config = SettingsConfigDict(env_file=".env")

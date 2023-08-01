@@ -12,3 +12,4 @@ from .roles import Role
 from .stickers import Sticker
 from .teams import Team
 from .users import User
+from .prompts import Prompt

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
-from models.schema import ImagineRequest, PromptOptions, ImagineData, ImagineResponse
+from models.schema import ImagineRequest, PromptOptions, ImagineData
 from models.messages import MessageRequest
 import aiohttp
 import random
-from models.interactions import InteractionRequest, InteractionType, InteractionResponseType
+from models.interactions import Interaction, InteractionResponseType
 from config import Settings, get_settings
 from typing_extensions import Annotated
 
@@ -37,37 +37,45 @@ async def midjourney_imagine(prompt: str, settings: Annotated[Settings, Depends(
         data=data
     )
     json_payroad = payroad.model_dump()
-    print(json_payroad)
     async with aiohttp.ClientSession() as session:
         async with session.post('https://discord.com/api/v9/interactions',
                                 json=json_payroad,
                                 headers=header) as resp:
-            if resp.status == 200:
+            if resp.ok:
                 return {
-                    "status_code": resp.status,
-                    "content": await resp.text(),
                     "msg": "Imagine job launched successfully"
                 }
             else:
                 return {
-                    "status_code": resp.status,
-                    "content": await resp.text(),
                     "msg": "Imagine job failed"
                 }
 
 
 @mj_api.post("/interactions")
-async def midjourney_interactions(req: InteractionRequest):
+async def midjourney_interactions(req: Interaction, settings: Annotated[Settings, Depends(get_settings)]):
+    header = {
+        "Content-Type": "application/json",
+        'authorization': settings.user_token
+    }
     if req.type == 1:
         return {
             'type': InteractionResponseType.PONG,
             'msg': 'Pong'
         }
-    else:
-        return {
-            'type': 0,
-            'msg': 'interaction failed!'
-        }
+    elif req.type == 2:
+        async with aiohttp.ClientSession() as session:
+            print(req.model_dump())
+            async with session.post('https://discord.com/api/v9/interactions',
+                                    json=req.model_dump(),
+                                    headers=header) as resp:
+                if resp.ok:
+                    return {
+                        "msg": "Interaction created!"
+                    }
+                else:
+                    return {
+                        "msg": "Interaction failed!"
+                    }
 
 
 @mj_api.post("/messages")

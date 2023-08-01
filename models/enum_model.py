@@ -97,3 +97,93 @@ class InteractionResponseType(IntEnum):
 class MembershipState(IntEnum):
     INVITED = 1
     ACCEPTED = 2
+
+
+class ApplicationCommandType(IntEnum):
+    CHAT_INPUT = 1
+    USER = 2
+    MESSAGE = 3
+
+
+class ApplicationCommandOptionType(IntEnum):
+    SUB_COMMAND = 1
+    SUB_COMMAND_GROUP = 2
+    STRING = 3
+    INTEGER = 4
+    BOOLEAN = 5
+    USER = 6
+    CHANNEL = 7
+    ROLE = 8
+    MENTIONABLE = 9
+    NUMBER = 10
+    ATTACHMENT = 11
+
+
+class ChannelType(IntEnum):
+    GUILD_TEXT = 0
+    DM = 1
+    GUILD_VOICE = 2
+    GROUP_DM = 3
+    GUILD_CATEGORY = 4
+    GUILD_ANNOUNCEMENT = 5
+    ANNOUNCEMENT_THREAD = 10
+    PUBLIC_THREAD = 11
+    PRIVATE_THREAD = 12
+    GUILD_STAGE_VOICE = 13
+    GUILD_DIRECTORY = 14
+    GUILD_FORUM = 15
+
+
+class VideoQualityMode(IntEnum):
+    AUTO = 1
+    FULL = 2
+
+
+class ChannelFlag(IntEnum):
+    PINNED = 1 << 1
+    REQUIRE_TAG = 1 << 4
+
+
+class SortOrderType(IntEnum):
+    LATEST_ACTIVITY = 0
+    CREATION_DATE = 1
+
+
+class ForumLayoutType(IntEnum):
+    NOT_SET = 0
+    LIST_VIEW = 1
+    GALLERY_VIEW = 2
+
+
+class Locale(str, Enum):
+    id = "id"
+    da = "da"
+    de = "de"
+    en_GB = "en-GB"
+    en_US = "en-US"
+    es_ES = "es-ES"
+    fr = "fr"
+    hr = "hr"
+    it = "it"
+    lt = "lt"
+    hu = "hu"
+    nl = "nl"
+    no = "no"
+    pl = "pl"
+    pt_BR = "pt-BR"
+    ro = "ro"
+    fi = "fi"
+    sv_SE = "sv-SE"
+    vi = "vi"
+    tr = "tr"
+    cs = "cs"
+    el = "el"
+    bg = "bg"
+    ru = "ru"
+    uk = "uk"
+    hi = "hi"
+    th = "th"
+    zh_CN = "zh-CN"
+    ja = "ja"
+    zh_TW = "zh-TW"
+    ko = "ko"

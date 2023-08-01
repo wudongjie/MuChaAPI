@@ -29,7 +29,7 @@ class GuildMember(BaseModel):
     premium_since: datetime | None = None
     deaf: bool
     mute: bool
-    flags: GuildMemberFlags
+    flags: GuildMemberFlags = 0
     pending: bool | None = None
     permissions: str | None = None
     communication_disabled_until: datetime | None = None

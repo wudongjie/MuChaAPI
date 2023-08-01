@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from config import Settings, get_settings
 from typing_extensions import Annotated
 import openai
+from models.prompts import Prompt
 
 gpt_api = APIRouter()
 
@@ -24,7 +25,7 @@ def sliding_windows(s: str, window_size):
 
 
 @gpt_api.post("/")
-async def talk_to_chatgpt(prompt: str,
+async def talk_to_chatgpt(prompt: Prompt,
                           settings: Annotated[Settings, Depends(get_settings)],
                           model: str = "text-davinci-003",
                           max_tokens: int = 300
@@ -32,20 +33,20 @@ async def talk_to_chatgpt(prompt: str,
     openai.api_key = settings.openai_api_key
     response = openai.Completion.create(
         model=model,
-        prompt=prompt,
+        prompt=prompt.prompts,
         max_tokens=max_tokens)
     return response
 
 
 @gpt_api.post("/summarize")
-async def talk_to_chatgpt(prompt: str,
+async def talk_to_chatgpt(prompt: Prompt,
                           settings: Annotated[Settings, Depends(get_settings)],
                           model: str = "text-davinci-003",
                           max_tokens: int = 300,
                           window_size: int = 1200
                           ):
     onests = "Summarize the following text in one short sentence \n"
-    merged_content = onests + prompt
+    merged_content = onests + prompt.prompts
     openai.api_key = settings.openai_api_key
     while (len(merged_content) > window_size):
         texts = sliding_windows(merged_content, window_size)
@@ -53,7 +54,7 @@ async def talk_to_chatgpt(prompt: str,
         for i in texts:
             merged = onests + i
             response = openai.Completion.create(
-                model=model, prompt=merged, max_tokens=max)
+                model=model, prompt=merged)
             response_list.append(response.choices[0].text)
         # print(response_list)
         merged_content = '.'.join(response_list)
