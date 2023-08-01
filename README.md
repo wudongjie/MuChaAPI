@@ -1,2 +1,2 @@
 # MuChaAPI
-A RestFul API for using MidJourney and ChatGPT interactively in Discord
+A RestFul API for content creating using MidJourney and ChatGPT 
