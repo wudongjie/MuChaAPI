@@ -51,8 +51,6 @@ OPENAI_API_KEY=[YOUR OPENAI API KEY]
 
 This command can be use for generate an image / or multiple images (up to 9 yet to develop) for a piece of news, for a story, or for a blog
 
-[GIF HERE]
-
 ### Generate a long text with several images based on the prompt to ChatGPT
 
 ```json
