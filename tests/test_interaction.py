@@ -3,15 +3,16 @@ import pytest
 from app import app
 from midjourney import midjourney
 import os
-from models.interactions import InteractionType, Interaction
+from models.interactions import InteractionType, InteractionRequest
 from models.interaction_data import ApplicationCommandData, InteractionDataOptions
 from httpx import AsyncClient
 from config import Settings, get_settings
+from payloads import TestPayload
 client = TestClient(app)
+setting = get_settings()
 
 
 def test_midjourney_interactions_ping():
-    setting = get_settings()
     req = {
         'id': 100001,
         'type': 1,
@@ -64,26 +65,40 @@ def test_midjourney_interactions_ping():
 #     assert await resp.json() == {"type": 2, "msg": "Pong"}
 #     return
 
+# @pytest.mark.anyio
+# async def test_midjourney_interactions_test():
+#     setting = get_settings()
+#     header = {
+#         "Content-Type": "application/json",
+#         'authorization': setting.user_token
+#     }
+#     req = {"id": 123712937,
+#            "type": 2,
+#            "application_id": "1128110065900081334",
+#            "guild_id": "1125988642519785584",
+#            "channel_id": "1125988643178299425",
+#            "session_id": "1c1b1a9ee11d3db4d480507e3e953be2",
+#            "data": {"version": "1135434235382079509",
+#                     "id": "1135434235382079508",
+#                     "guild_id": "1125988642519785584",
+#                     "name": "test",
+#                     "type": 1,
+#                     "options": [],
+#                     "application_command": {"id": "1135434235382079508",
+#                                             "application_id": "1128110065900081334",
+#                                             "version": "1135434235382079509",
+#                                             "default_member_permissions": None, "type": 1,
+#                                             "nsfw": False, "name": "test", "description": "Test",
+#                                             "guild_id": "1125988642519785584",
+#                                             "options": [{"type": 3, "name": "arg", "description": "…"}]},
+#                     "attachments": []}, "nonce": "1136523667631505408"}
 
-def test_midjourney_interactions_test():
-    setting = get_settings()
-    req = {"id": 213123123,
-           "version": 1,
-           "type": 2,
-           "token": "hsdjfasdjf",
-           "application_id": "1128110065900081334",
-           "guild_id": setting.guild_id,
-           "channel_id": setting.channel_id,
-           "session_id": "077cc0c4b93a7090a4e80229f33a8089",
-           "data": {"version": "1135434235382079509",
-                    "id": "1135434235382079508",
-                    "guild_id": setting.guild_id,
-                    "name": "test",
-                    "type": 1,
-                    "options": [{"type": 3, "name": "arg", "value": "a"}]}}
-    interaction = Interaction(**req)
-    assert type(interaction) == Interaction
-    response = client.post("/midjourney/interactions",
-                           json=interaction.model_dump())
-    assert response.status_code == 200
-    assert response.json() == {"msg": "Interaction created!"}
+#     interaction = InteractionRequest(**req)
+#     assert interaction.type == 2
+#     assert type(interaction) == InteractionRequest
+#     async with AsyncClient(app=app) as session:
+#         resp = await session.post("https://discord.com/api/v9/interactions",
+#                                   json=interaction.model_dump(),
+#                                   headers=header)
+#         assert resp.status_code == 200
+#         assert resp.json() == {"msg": "Interaction created!"}

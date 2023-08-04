@@ -5,7 +5,7 @@ from .channels import Channel
 from .embeds import Embed
 from .emojis import Emoji
 from .guilds import Guild
-from .interactions import Interaction
+from .interactions import Interaction, InteractionRequest
 from .messages import Message
 from .reactions import Reaction
 from .roles import Role

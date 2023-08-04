@@ -26,7 +26,7 @@ class Interaction(BaseModel):
     app_permissions: str | None = None
     locale: str | None = None
     guild_locale: str | None = None
-    session_id: str
+    # session_id: str
 
 
 class InteractionRequest(BaseModel):
@@ -36,8 +36,9 @@ class InteractionRequest(BaseModel):
     data: InteractionData | None = None
     guild_id: int | None = None
     channel: Channel | None = None
-    token: str
-    version: int
+    channel_id: int | None = None
+    session_id: str
+    version: int = 1
 
 
 class InteractionResponse(BaseModel):
