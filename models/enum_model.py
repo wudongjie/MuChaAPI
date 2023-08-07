@@ -187,3 +187,24 @@ class Locale(str, Enum):
     ja = "ja"
     zh_TW = "zh-TW"
     ko = "ko"
+
+
+class MidJourneyPromptStyle(str, Enum):
+    raw = "raw"
+    m4a = "4a"
+    m4b = "4b"
+    m4c = "4c"
+    cute = "cute"
+    expressive = "expressive"
+    original = "original"
+    scenic = "scenic"
+
+
+class MidJourneyPromptVersion(str, Enum):
+    v1 = "1"
+    v2 = "2"
+    v3 = "3"
+    v4 = "4"
+    v5 = "5"
+    v51 = "5.1"
+    v52 = "5.2"

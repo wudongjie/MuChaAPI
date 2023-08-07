@@ -7,6 +7,9 @@ import asyncio
 import openai
 from config import get_settings
 from payloads import ImaginePayload
+from utils import MidJourneyPromptGenerator
+from typing import Union
+from discord.app_commands import locale_str
 
 
 def sliding_windows(s: str, window_size):
@@ -48,7 +51,7 @@ tree = app_commands.CommandTree(client)
 
 
 @tree.command(name="test", description="Test", guild=discord.Object(id=os.environ['GUILD_ID']))
-async def foo(interaction: discord.Interaction, arg: str = ""):
+async def interaction_test(interaction: discord.Interaction, arg: str = ""):
     await interaction.response.defer(ephemeral=True)
     if arg == "":
         await interaction.followup.send("Test success!")
@@ -57,10 +60,10 @@ async def foo(interaction: discord.Interaction, arg: str = ""):
 
 
 @tree.command(name="chatgpt", description="Ask chatgpt", guild=discord.Object(id=os.environ['GUILD_ID']))
-async def foo(interaction: discord.Interaction,
-              prompt: str,
-              model: str = "text-davinci-003",
-              max_tokens: int = 300):
+async def interaction_chatgpt(interaction: discord.Interaction,
+                              prompt: str,
+                              model: str = "text-davinci-003",
+                              max_tokens: int = 300):
     await interaction.response.defer(ephemeral=True)
     # payload = {"prompts": prompt}
     openai.api_key = settings.openai_api_key
@@ -77,11 +80,11 @@ async def foo(interaction: discord.Interaction,
 
 
 @tree.command(name="summarize", description="Summarize a long text to a short sentence", guild=discord.Object(id=os.environ['GUILD_ID']))
-async def foo(interaction: discord.Interaction,
-              prompt: str,
-              model: str = "text-davinci-003",
-              max_tokens: int = 300,
-              window_size: int = 1200):
+async def interaction_summarize(interaction: discord.Interaction,
+                                prompt: str,
+                                model: str = "text-davinci-003",
+                                max_tokens: int = 300,
+                                window_size: int = 1200):
     await interaction.response.defer(ephemeral=True)
     onests = "Summarize the following text in one short sentence \n"
     merged_content = onests + prompt
@@ -108,11 +111,11 @@ async def foo(interaction: discord.Interaction,
 
 
 @tree.command(name="muse", description="Generate images for an article", guild=discord.Object(id=os.environ['GUILD_ID']))
-async def foo(interaction: discord.Interaction,
-              prompt: str,
-              model: str = "text-davinci-003",
-              max_tokens: int = 300,
-              window_size: int = 1200):
+async def interaction_muse(interaction: discord.Interaction,
+                           prompt: str,
+                           model: str = "text-davinci-003",
+                           max_tokens: int = 300,
+                           window_size: int = 1200):
     await interaction.response.defer(ephemeral=True)
     onests = "Summarize the following text in one short sentence \n"
     merged_content = onests + prompt
@@ -139,6 +142,9 @@ async def foo(interaction: discord.Interaction,
         "Content-Type": "application/json",
         'authorization': settings.user_token
     }
+    # answer = MidJourneyPromptGenerator(
+    #     answer, **midjourney_params).dump_prompt()
+    # print(answer)
     payroad_imagine = ImaginePayload(settings, answer).model_dump()
     async with aiohttp.ClientSession() as session:
         async with session.post('https://discord.com/api/v9/interactions',
@@ -151,11 +157,11 @@ async def foo(interaction: discord.Interaction,
 
 
 @tree.command(name="mucha", description="Generate a long text with images based on the prompt to ChatGPT", guild=discord.Object(id=os.environ['GUILD_ID']))
-async def foo(interaction: discord.Interaction,
-              prompt: str,
-              model: str = "text-davinci-003",
-              max_tokens: int = 300,
-              window_size: int = 1200):
+async def interaction_mucha(interaction: discord.Interaction,
+                            prompt: str,
+                            model: str = "text-davinci-003",
+                            max_tokens: int = 300,
+                            window_size: int = 1200):
     await interaction.response.defer(ephemeral=True)
     openai.api_key = settings.openai_api_key
     response = openai.Completion.create(
