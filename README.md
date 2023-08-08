@@ -6,6 +6,7 @@ MuChaAPI combines Midjourney and ChatGPT to faciliate content creating. Allowing
 
 - `/muse` creates an image / multiple images(TODO) given a long text.
 - `/mucha` generates a long text with an image / multiple images(TODO) based on the prompt you sent.
+- Support basic parameters from Midjourney.
 
 The following listed several use cases:
 
@@ -23,7 +24,7 @@ You can also interact with ChatGPT in the Discord using `/chatgpt` or summarize 
 - Create an .env in the root folder
 - Add the environment variable to .env base on the following:
 
-```json
+```bash
 DISCORD_TOKEN=[YOUR DISCORD TOKEN WHICH IS THE BOT TOKEN]
 USER_TOKEN=[YOUR USER TOKEN]
 CHANNEL_ID=[YOUR CHANNEL ID]
@@ -43,7 +44,7 @@ OPENAI_API_KEY=[YOUR OPENAI API KEY]
 
 ### Generating images based on a long text block (article / report / blog / story )
 
-```json
+```
 /muse [prompt: str]
 ```
 
@@ -53,8 +54,14 @@ This command can be use for generate an image / or multiple images (up to 9 yet 
 
 ### Generate a long text with several images based on the prompt to ChatGPT
 
-```json
+```
 /mucha [prompt: str]
+```
+
+Notes: The `prompt` supports all basic parameters from Midjourney. Parameters can be added just like the Midjourney `/imagine`. Example:
+
+```
+/mucha generate a story --fast --style 4a --version 4
 ```
 
 ![2023-08-04 13.09.32.gif](contents/2023-08-04_13.09.32.gif)
@@ -63,7 +70,7 @@ This command can be use for generate an image / or multiple images (up to 9 yet 
 
 ### Write advertisement with images
 
-```json
+```
 /mucha write me an advertisement for a BMW car
 ```
 
@@ -73,7 +80,7 @@ MuCha Reply: Introducing the BMW 3 Series – the perfect blend of luxury and pe
 
 ### Write a fairytale with an image
 
-```json
+```
 /mucha write me an Andersen fairytale
 ```
 
@@ -93,7 +100,7 @@ The moral of the story? True wishes don't need to be flashy or even common to be
 
 ### Generate a character with a portrait
 
-```json
+```
 /mucha describe a cyberpunk female character
 ```
 
@@ -107,7 +114,7 @@ Altogether, she's a powerful cyberpunk fighter who’s not afraid to take chance
 
 ### Describe a fantasy world with an image
 
-```json
+```
 /mucha describe a fantasy world in details
 ```
 
@@ -134,7 +141,7 @@ The native of Naples, Florida, says he's always known about the issue of Burmese
 He became interested in python hunting after watching professional hunters on television, and started hunting them himself two years ago. Last year, he entered the Florida Python Challenge - the state's annual python hunting contest - but dropped out because he was too far behind in the rankings. "This year I want to win it," he says. The Florida Python Challenge draws in hundreds of participants each year from as far away as Canada, Belgium and Latvia who are charmed by the
 prospect of fame and fortune, including up to $30,000 (£23,600) in prize money.
 
-```json
+```
 /muse [news text above]
 ```
 
@@ -142,7 +149,7 @@ prospect of fame and fortune, including up to $30,000 (£23,600) in prize money.
 
 ### Interacting with ChatGPT
 
-```json
+```
 /chatgpt [prompt: str]
 ```
 

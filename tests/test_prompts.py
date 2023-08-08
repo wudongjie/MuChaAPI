@@ -1,5 +1,5 @@
 import pytest
-from utils import MidJourneyPromptGenerator
+from utils import MidJourneyPromptGenerator, prompt_to_dict, dict_to_prompt, validate_prompt
 from pydantic import ValidationError
 
 
@@ -18,3 +18,21 @@ def test_generate_mjprompts():
         pg4 = MidJourneyPromptGenerator(
             "hello world", chaos=1000
         )
+
+
+def test_prompt_to_dict():
+    prompts1 = "generate a cat name --iw 1.0 --quality 1.0 --style 4a --version 4 --fast"
+    pmt_dict1 = {"prompt": "generate a cat name", "iw": "1.0",
+                 "quality": "1.0", "style": "4a", "version": "4", "fast": True}
+    assert prompt_to_dict(prompts1) == pmt_dict1
+    assert validate_prompt(**pmt_dict1) == []
+    assert dict_to_prompt(pmt_dict1) == prompts1
+    prompts2 = "generate a cat name --fast --style 4a --version 4"
+    pmt_dict2 = {"prompt": "generate a cat name",
+                 "fast": True, "style": "4a", "version": "4"}
+    assert prompt_to_dict(prompts2) == pmt_dict2
+    assert validate_prompt(**pmt_dict2) == []
+    assert dict_to_prompt(pmt_dict2) == prompts2
+    pmt_dict2 = {"prompt": "hello world", "chaos": "1000"}
+    assert validate_prompt(
+        **pmt_dict2) == ["Invalid Prompts: Your input '1000' on the argument 'chaos' is invalid: Input should be less than or equal to 100"]

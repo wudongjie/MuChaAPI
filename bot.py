@@ -7,9 +7,10 @@ import asyncio
 import openai
 from config import get_settings
 from payloads import ImaginePayload
-from utils import MidJourneyPromptGenerator
+from utils import prompt_to_dict, dict_to_prompt, validate_prompt
 from typing import Union
 from discord.app_commands import locale_str
+from pydantic import ValidationError
 
 
 def sliding_windows(s: str, window_size):
@@ -117,8 +118,14 @@ async def interaction_muse(interaction: discord.Interaction,
                            max_tokens: int = 300,
                            window_size: int = 1200):
     await interaction.response.defer(ephemeral=True)
+    prompt_dict = prompt_to_dict(prompt)
+    valid = validate_prompt(**prompt_dict)
+    if valid != []:
+        for e in valid:
+            await interaction.followup.send(e)
+        return
     onests = "Summarize the following text in one short sentence \n"
-    merged_content = onests + prompt
+    merged_content = onests + prompt_dict["prompt"]
     openai.api_key = settings.openai_api_key
     while (len(merged_content) > window_size):
         texts = sliding_windows(merged_content, window_size)
@@ -142,9 +149,8 @@ async def interaction_muse(interaction: discord.Interaction,
         "Content-Type": "application/json",
         'authorization': settings.user_token
     }
-    # answer = MidJourneyPromptGenerator(
-    #     answer, **midjourney_params).dump_prompt()
-    # print(answer)
+    prompt_dict["prompt"] = answer
+    answer = dict_to_prompt(prompt_dict)
     payroad_imagine = ImaginePayload(settings, answer).model_dump()
     async with aiohttp.ClientSession() as session:
         async with session.post('https://discord.com/api/v9/interactions',
@@ -163,10 +169,16 @@ async def interaction_mucha(interaction: discord.Interaction,
                             max_tokens: int = 300,
                             window_size: int = 1200):
     await interaction.response.defer(ephemeral=True)
+    prompt_dict = prompt_to_dict(prompt)
+    valid = validate_prompt(**prompt_dict)
+    if valid != []:
+        for e in valid:
+            await interaction.followup.send(e)
+        return
     openai.api_key = settings.openai_api_key
     response = openai.Completion.create(
         model=model,
-        prompt=prompt,
+        prompt=prompt_dict['prompt'],
         max_tokens=max_tokens)
     try:
         answer = response['choices'][0]['text'].strip()
@@ -200,6 +212,8 @@ async def interaction_mucha(interaction: discord.Interaction,
         "Content-Type": "application/json",
         'authorization': settings.user_token
     }
+    prompt_dict["prompt"] = answer
+    answer = dict_to_prompt(prompt_dict)
     payroad_imagine = ImaginePayload(settings, answer).model_dump()
     async with aiohttp.ClientSession() as session:
         async with session.post('https://discord.com/api/v9/interactions',
