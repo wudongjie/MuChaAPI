@@ -1,5 +1,5 @@
 import pytest
-from utils import MidJourneyPromptGenerator, prompt_to_dict, dict_to_prompt, validate_prompt
+from utils import MidJourneyPromptGenerator, prompt_to_dict, dict_to_prompt, validate_prompt, gen_multiple_prompts
 from pydantic import ValidationError
 
 
@@ -36,3 +36,15 @@ def test_prompt_to_dict():
     pmt_dict2 = {"prompt": "hello world", "chaos": "1000"}
     assert validate_prompt(
         **pmt_dict2) == ["Invalid Prompts: Your input '1000' on the argument 'chaos' is invalid: Input should be less than or equal to 100"]
+
+
+def test_generate_multiple_prompts():
+    prompts1 = """Paragraph A\n\nParagraph B\n\nParagraph C\n\n--fast --version 4 --style 4a"""
+    pmt_list1 = [{"prompt": "Paragraph A", "fast": True, "version": "4", "style": "4a"},
+                 {"prompt": "Paragraph B", "fast": True,
+                     "version": "4", "style": "4a"},
+                 {"prompt": "Paragraph C", "fast": True, "version": "4", "style": "4a"}]
+    pmt_list_ex = gen_multiple_prompts(prompts1)
+    assert pmt_list1[0] == pmt_list_ex[0]
+    assert pmt_list1[1] == pmt_list_ex[1]
+    assert pmt_list1[2] == pmt_list_ex[2]

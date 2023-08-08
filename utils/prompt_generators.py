@@ -122,3 +122,62 @@ def convert_errors(e: ValidationError) -> list[str]:
             error["loc"][0] + "' is invalid: " + error["msg"]
         error_msgs.append(msg)
     return error_msgs
+
+
+def gen_multiple_prompts(text: str) -> list[dict]:
+    """
+    Given a long text with multiple paragraphs, generate prompts per paragraphs
+    Example:
+    Input: 
+    "Paragraph A
+
+    Paragraph B
+
+    Parapraph C
+
+    --fast --version 4 --style 4a"
+    Output:
+    [{
+    "prompt": "Paragraph A",
+    "fast": True,
+    "version": "4",
+    "style": "4a"
+    },
+    {
+    "prompt": "Paragraph B",
+    "fast": True,
+    "version": "4",
+    "style": "4a"
+    },
+    {
+    "prompt": "Paragraph C",
+    "fast": True,
+    "version": "4",
+    "style": "4a"   
+    }
+    ]
+    """
+    text_list = text.splitlines()
+    text_list = [x for x in text_list if x.strip() != ""]
+    prompt_list = []
+    args_dict = {}
+    out_list = []
+    for l in text_list:
+        if "--" not in l:
+            prompt_list.append(l)
+            continue
+        args = [i.strip() for i in l.split("--")]
+        if args[0] != "":
+            prompt_list.append(args[0])
+        for i in range(1, len(args)):
+            if (" " in args[i]):
+                arg_list = args[i].split(" ")
+                args_dict[arg_list[0]] = arg_list[1]
+            else:
+                args_dict[args[i]] = True
+    # Generate a list of dict
+    for prompt in prompt_list:
+        args_dict["prompt"] = prompt
+        out_list.append(args_dict.copy())
+    print(out_list)
+    return out_list
